@@ -21,11 +21,15 @@ package net.rcarz.jiraclient.agile;
 
 import net.rcarz.jiraclient.Field;
 import net.rcarz.jiraclient.JiraException;
+import net.rcarz.jiraclient.Resource;
 import net.rcarz.jiraclient.RestClient;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents an Agile Sprint.
@@ -34,82 +38,101 @@ import java.util.List;
  */
 public class Sprint extends AgileResource {
 
-    private String state;
-    private long originBoardId;
-    private Date startDate;
-    private Date endDate;
-    private Date completeDate;
+  private String state;
+  private long originBoardId;
+  private Date startDate;
+  private Date endDate;
+  private Date completeDate;
 
-    /**
-     * Creates a rapid view from a JSON payload.
-     *
-     * @param restclient REST client instance
-     * @param json       JSON payload
-     */
-    protected Sprint(RestClient restclient, JSONObject json) throws JiraException {
-        super(restclient, json);
-    }
+  /**
+   * Creates a rapid view from a JSON payload.
+   *
+   * @param restclient REST client instance
+   * @param json       JSON payload
+   */
+  protected Sprint(RestClient restclient, JSONObject json) throws JiraException {
+    super(restclient, json);
+  }
 
-    /**
-     * Retrieve all sprints related to the specified board.
-     *
-     * @param restclient REST client instance
-     * @param sprintId   The Internal JIRA sprint ID.
-     * @return The sprint for the specified ID.
-     * @throws JiraException when the retrieval fails
-     */
-    public static Sprint get(RestClient restclient, long sprintId) throws JiraException {
-        return AgileResource.get(restclient, Sprint.class, RESOURCE_URI + "sprint/" + sprintId);
-    }
+  /**
+   * Retrieve all sprints related to the specified board.
+   *
+   * @param restclient REST client instance
+   * @param sprintId   The Internal JIRA sprint ID.
+   * @return The sprint for the specified ID.
+   * @throws JiraException when the retrieval fails
+   */
+  public static Sprint get(RestClient restclient, long sprintId) throws JiraException {
+    return AgileResource.get(restclient, Sprint.class, RESOURCE_URI + "sprint/" + sprintId);
+  }
 
-    /**
-     * Retrieve all sprints related to the specified board.
-     *
-     * @param restclient REST client instance
-     * @param boardId    The Internal JIRA board ID.
-     * @return The list of sprints associated to the board.
-     * @throws JiraException when the retrieval fails
-     */
-    public static List<Sprint> getAll(RestClient restclient, long boardId) throws JiraException {
-        return AgileResource.list(restclient, Sprint.class, RESOURCE_URI + "board/" + boardId + "/sprint");
-    }
+  /**
+   * Retrieve all sprints related to the specified board.
+   *
+   * @param restclient REST client instance
+   * @param boardId    The Internal JIRA board ID.
+   * @return The list of sprints associated to the board.
+   * @throws JiraException when the retrieval fails
+   */
+  public static List<Sprint> getAll(RestClient restclient, long boardId) throws JiraException {
+    return AgileResource.list(restclient, Sprint.class,
+        RESOURCE_URI + "board/" + boardId + "/sprint");
+  }
 
-    /**
-     * @return All issues in the Sprint.
-     * @throws JiraException when the retrieval fails
-     */
-    public List<Issue> getIssues() throws JiraException {
-        return AgileResource.list(getRestclient(), Issue.class, RESOURCE_URI + "sprint/" + getId() + "/issue", "issues");
-    }
+  public static List<Sprint> getAllActiveSprint(RestClient restclient, long boardId)
+      throws JiraException {
+    Map<String, String> xx = new HashMap<>();
+    xx.put("state", "active");
+    return AgileResource.list(restclient, Sprint.class,
+        RESOURCE_URI + "board/" + boardId + "/sprint", xx);
+  }
 
-    @Override
-    protected void deserialize(JSONObject json) throws JiraException {
-        super.deserialize(json);
-        state = Field.getString(json.get("state"));
-        originBoardId = getLong(json.get("originBoardId"));
-        startDate = Field.getDateTime(json.get("startDate"));
-        endDate = Field.getDateTime(json.get("endDate"));
-        completeDate = Field.getDateTime(json.get("completeDate"));
+  public void moveIssueToSprint(String Issue, String SprintID) throws JiraException {
+    try {
+      JSONObject req = new JSONObject();
+      req.put("issues", "[\"" + Issue + "\"]");
+      JSON json = getRestclient().post(RESOURCE_URI + "sprint/" + SprintID + "/issue", req);
+    } catch (Exception ex) {
+      throw new JiraException("Failed to move issue to sprint", ex);
     }
+  }
 
-    public String getState() {
-        return state;
-    }
+  /**
+   * @return All issues in the Sprint.
+   * @throws JiraException when the retrieval fails
+   */
+  public List<Issue> getIssues() throws JiraException {
+    return AgileResource.list(getRestclient(), Issue.class,
+        RESOURCE_URI + "sprint/" + getId() + "/issue", "issues");
+  }
 
-    public long getOriginBoardId() {
-        return originBoardId;
-    }
+  @Override
+  protected void deserialize(JSONObject json) throws JiraException {
+    super.deserialize(json);
+    state = Field.getString(json.get("state"));
+    originBoardId = getLong(json.get("originBoardId"));
+    startDate = Field.getDateTime(json.get("startDate"));
+    endDate = Field.getDateTime(json.get("endDate"));
+    completeDate = Field.getDateTime(json.get("completeDate"));
+  }
 
-    public Date getStartDate() {
-        return startDate;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public Date getEndDate() {
-        return endDate;
-    }
+  public long getOriginBoardId() {
+    return originBoardId;
+  }
 
-    public Date getCompleteDate() {
-        return completeDate;
-    }
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public Date getCompleteDate() {
+    return completeDate;
+  }
 }
-
