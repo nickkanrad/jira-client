@@ -3,33 +3,24 @@ package net.rcarz.kantime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.testng.annotations.DataProvider;
 import net.rcarz.jiraclient.BasicCredentials;
 import net.rcarz.jiraclient.CustomFieldOption;
 import net.rcarz.jiraclient.Issue;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
+import net.rcarz.jiraclient.Version;
+
 import org.testng.annotations.Test;
 import net.rcarz.jiraclient.Field;
 
 public class AddSubIssueToJira {
 
-  String fixversion = "7.4";
   Issue exisitingIssue = null;
   Issue ParentIssue = null;
   String qa = "";
   String team = "";
 
-  // @DataProvider(name = "JIRAdp")
-  // public static Object[][] credentials() throws Exception {
-  // ReadExcel excels = new ReadExcel();
-  // Object[][] returnObject = excels.getEntireExcelSheetData(
-  // "C:\\Users\\Nitish\\Desktop\\7.4\\JIRA Add sub issue.xlsx", "Sheet1");
-  // return returnObject;
-  // }
-
   @SuppressWarnings({ "serial", "unchecked" })
-  // @Test(dataProvider = "JIRAdp")
   @Test
   public void f() throws JiraException {
 
@@ -56,14 +47,11 @@ public class AddSubIssueToJira {
       }
 
       switch (team) {
-        case "Dev - ICE":
-          qa = "dwilliams";
-          break;
-        case "Dev - Mobile":
+        case "Devender":
           qa = "dwilliams";
           break;
         case "Nithya":
-          qa = "gbrown";
+          qa = "dwilliams";
           break;
         case "Praful":
           qa = "gbrown";
@@ -75,13 +63,19 @@ public class AddSubIssueToJira {
           qa = "dwilliams";
           break;
         case "Shruthi (SSRS)":
-          qa = "dwilliams";
+          qa = "alewis";
           break;
         case "Syed":
           qa = "alewis";
           break;
+        case "Web":
+          qa = "alewis";
+          break;
+        case "Onboarding":
+          qa = "dwilliams";
+          break;
         default:
-          qa = "nancy";
+          qa = "";
           break;
       }
 
@@ -94,15 +88,21 @@ public class AddSubIssueToJira {
                   + "doc/KPC along with better user experience and brings value to product.")
           .field(Field.ASSIGNEE, qa).field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("AcceptForTesting");
             }
           }).execute();
@@ -115,15 +115,21 @@ public class AddSubIssueToJira {
           .field(Field.DESCRIPTION, "Write test cases for the mentioned task")
           .field(Field.ASSIGNEE, "").field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("Testcase");
             }
           }).execute();
@@ -134,17 +140,23 @@ public class AddSubIssueToJira {
       Issue testCaseReviewSubtask = ParentIssue.createSubtask()
           .field(Field.SUMMARY, "Test Case Review " + Key + " : " + exisitingIssue.getSummary())
           .field(Field.DESCRIPTION, "Review the test cases for the mentioned task")
-          .field(Field.ASSIGNEE, qa).field(Field.FIX_VERSIONS, new ArrayList() {
+          .field(Field.ASSIGNEE, "").field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("TestCaseReview");
             }
           }).execute();
@@ -157,15 +169,21 @@ public class AddSubIssueToJira {
           .field(Field.DESCRIPTION, "Test the task in detail").field(Field.ASSIGNEE, "")
           .field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("Testing");
             }
           }).execute();
@@ -182,15 +200,21 @@ public class AddSubIssueToJira {
                   + "The verified data correction should be mentioned here in comments.")
           .field(Field.ASSIGNEE, "").field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("dataCorrectionVerification");
             }
           }).execute();
@@ -208,15 +232,21 @@ public class AddSubIssueToJira {
                   + "will be satisfied with this task.")
           .field(Field.ASSIGNEE, "").field(Field.FIX_VERSIONS, new ArrayList() {
             {
-              add(fixversion);
+              List<Version> cfselec = ParentIssue.getFixVersions();
+              for (Version cfo : cfselec) {
+                add(cfo.getName());
+              }
             }
           }).field(Field.CUSTOMFIELD_HHTEAM, new ArrayList() {
             {
-              add(team);
+              for (CustomFieldOption cfo : cfselect) {
+                add(cfo.getValue());
+              }
             }
           }).field(Field.LABELS, new ArrayList() {
             {
               addAll(exisitingIssue.getLabels());
+              add("QA_Task");
               add("Testing_standards");
             }
           }).execute();

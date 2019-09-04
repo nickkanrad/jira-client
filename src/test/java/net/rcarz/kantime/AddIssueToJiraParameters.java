@@ -86,7 +86,7 @@ public class AddIssueToJiraParameters {
        */
       List<net.rcarz.jiraclient.agile.Sprint> xx = boards.getActiveSprints();
       for (net.rcarz.jiraclient.agile.Sprint ss : xx) {
-        if (ss.getName().contains(HHTeam)) {
+        if (ss.getName().contains(HHTeam.split(" ")[0])) {
           ss.moveIssueToSprint(newIssue.toString(), String.valueOf(ss.getId()));
           System.out.println("moved issue " + newIssue + "to sprint " + ss.getName());
         }
