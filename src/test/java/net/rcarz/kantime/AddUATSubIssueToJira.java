@@ -28,6 +28,7 @@ public class AddUATSubIssueToJira {
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
 
     String Key = System.getProperty("TaskKey");
+    String Assignee = System.getProperty("Assignee");
 
     try {
       exisitingIssue = jira.getIssue(Key);
@@ -83,7 +84,7 @@ public class AddUATSubIssueToJira {
       @SuppressWarnings("rawtypes")
       Issue testCaseReviewSubtask = ParentIssue.createSubtask()
           .field(Field.SUMMARY, "UAT " + Key + " : " + ParentIssue.getSummary())
-          .field(Field.DESCRIPTION, "UAT").field(Field.ASSIGNEE, "")
+          .field(Field.DESCRIPTION, "UAT").field(Field.ASSIGNEE, Assignee)
           .field(Field.FIX_VERSIONS, new ArrayList() {
             {
               List<Version> cfselec = ParentIssue.getFixVersions();

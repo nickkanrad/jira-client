@@ -1,5 +1,6 @@
 package net.rcarz.kantime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class AddSubIssueToJira {
 
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
+    BOT autobot = new BOT();
 
     String Key = System.getProperty("TaskKey");
 
@@ -252,12 +254,17 @@ public class AddSubIssueToJira {
           }).execute();
       System.out.println("Closure Subtask: " + testingstandardClosureSubtask);
 
+      autobot.sendPost(qa, "New release tasks are added");
+
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());
 
       if (ex.getCause() != null) {
         System.err.println(ex.getCause().getMessage());
       }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 }
