@@ -25,22 +25,13 @@ public class AddIssueToJiraParameters {
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
     AgileClient ag = new AgileClient(jira);
 
-    String caseNumber = "EVR-130";
-    String Assignee = "";
-    String qa = "";
-    String JiraEpic = "HH-16549";
-    String HHTeam = "Shaji";
-    String fixVersion = "7.4";
+    String caseNumber = System.getProperty("CaseNumber");
+    String Assignee = System.getProperty("Developer");
+    String qa = System.getProperty("QA");
+    String JiraEpic = System.getProperty("JiraEpic");
+    String HHTeam = JiraEpic.split(":")[1];
+    String fixVersion = System.getProperty("Version");
     String ChatRoom = "";
-
-    // String caseNumber = System.getProperty("CaseNumber");
-    // String Assignee = System.getProperty("Developer");
-    // String qa = System.getProperty("QA");
-    // String JiraEpic = System.getProperty("JiraEpic");
-    // String HHTeam = JiraEpic.split(":")[1];
-    // String fixVersion = System.getProperty("Version");
-    // String ChatRoom = "";
-
     JiraEpic = JiraEpic.split(":")[0];
 
     try {
