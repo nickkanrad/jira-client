@@ -1,5 +1,6 @@
 package net.rcarz.kantime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +20,26 @@ public class AddIssueToJiraParameters {
   @Test()
   public void f() throws JiraException {
 
+    BOT autobot = new BOT();
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
     AgileClient ag = new AgileClient(jira);
 
-    String caseNumber = System.getProperty("CaseNumber");
-    String Assignee = System.getProperty("Developer");
-    String qa = System.getProperty("QA");
-    String JiraEpic = System.getProperty("JiraEpic");
-    String HHTeam = JiraEpic.split(":")[1];
-    String fixVersion = System.getProperty("Version");
+    String caseNumber = "EVR-130";
+    String Assignee = "";
+    String qa = "";
+    String JiraEpic = "HH-16549";
+    String HHTeam = "Shaji";
+    String fixVersion = "7.4";
+    String ChatRoom = "";
+
+    // String caseNumber = System.getProperty("CaseNumber");
+    // String Assignee = System.getProperty("Developer");
+    // String qa = System.getProperty("QA");
+    // String JiraEpic = System.getProperty("JiraEpic");
+    // String HHTeam = JiraEpic.split(":")[1];
+    // String fixVersion = System.getProperty("Version");
+    // String ChatRoom = "";
 
     JiraEpic = JiraEpic.split(":")[0];
 
@@ -60,21 +71,31 @@ public class AddIssueToJiraParameters {
       switch (HHTeam) {
         case "Nithya":
           boards = ag.getBoard(28);
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/AAAA5STe_Ys/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=sQ6gB8rZK8y2ew2HCi2YAV3byEEC_rO6TxznYb_54xk%3D";
           break;
         case "Praful":
           boards = ag.getBoard(30);
           break;
         case "Syed":
           boards = ag.getBoard(8);
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/AAAAoIik-8s/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=1bjRE_UBy0LKi412h-UwCsTA5klFpbyjVTZXGMfDC54%3D";
           break;
         case "Shruthi (SSRS)":
           boards = ag.getBoard(34);
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/AAAAULS9ugA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=8ST6dOW-UdhFRKjRgRSORlwCwCG_xy8xgJzpA7_2hcY%3D";
           break;
         case "Shaji":
           boards = ag.getBoard(33);
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/AAAATuJwdBE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=yjBuKcfxbg-jKhS4yozpay5pO-sizhwRPflI7Gq1z04%3D";
           break;
         case "Rasheed":
           boards = ag.getBoard(32);
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/AAAA6ZwFqhc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=G5MGfp71kopRNkZtoWwHst-gyrGNjvccAum8Mwv6s4A%3D";
           break;
         case "Devender":
           boards = ag.getBoard(25);
@@ -113,6 +134,12 @@ public class AddIssueToJiraParameters {
               }).field(Field.TICKET, caseNumber).execute();
       System.out.println("subtask:" + subtask);
 
+      try {
+        autobot.sendPost(ChatRoom, "Case#: " + caseNumber + " added to JIRA. Key: " + newIssue);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());
 

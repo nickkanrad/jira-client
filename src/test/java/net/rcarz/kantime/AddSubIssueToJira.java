@@ -254,7 +254,18 @@ public class AddSubIssueToJira {
           }).execute();
       System.out.println("Closure Subtask: " + testingstandardClosureSubtask);
 
-      autobot.sendPost(qa, "New release tasks are added");
+      String ChatRoom = "";
+      switch (qa) {
+        case "dwilliams":
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/-6u3zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=kFtCFXHPqycU9YDd7rtqmwnN9SAa3BOvxVqbU_iYGX8%3D";
+          break;
+        case "alewis":
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/h-23zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7TqRRaPq_54oiOB0n1f0zStwqeoGbFcDEjpd47UGWtU%3D";
+          break;
+      }
+      autobot.sendPost(ChatRoom, "New release tasks are added:" + acceptanceSubtask);
 
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());

@@ -1,5 +1,6 @@
 package net.rcarz.kantime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class AddUATSubIssueToJira {
   @Test
   public void f() throws JiraException {
 
+    BOT autobot = new BOT();
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
 
@@ -82,7 +84,7 @@ public class AddUATSubIssueToJira {
 
       /* Create sub-task - TEST CASE REVIEW */
       @SuppressWarnings("rawtypes")
-      Issue testCaseReviewSubtask = ParentIssue.createSubtask()
+      Issue UatSubtask = ParentIssue.createSubtask()
           .field(Field.SUMMARY, "UAT " + Key + " : " + ParentIssue.getSummary())
           .field(Field.DESCRIPTION, "UAT").field(Field.ASSIGNEE, Assignee)
           .field(Field.FIX_VERSIONS, new ArrayList() {
@@ -105,7 +107,25 @@ public class AddUATSubIssueToJira {
               add("UAT");
             }
           }).execute();
-      System.out.println("UAT Subtask: " + testCaseReviewSubtask);
+      System.out.println("UAT Subtask: " + UatSubtask);
+
+      String ChatRoom = "";
+      switch (qa) {
+        case "dwilliams":
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/-6u3zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=kFtCFXHPqycU9YDd7rtqmwnN9SAa3BOvxVqbU_iYGX8%3D";
+          break;
+        case "alewis":
+          ChatRoom =
+              "https://chat.googleapis.com/v1/spaces/h-23zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7TqRRaPq_54oiOB0n1f0zStwqeoGbFcDEjpd47UGWtU%3D";
+          break;
+      }
+      try {
+        autobot.sendPost(ChatRoom, "New UAT tasks are added:" + UatSubtask);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());
