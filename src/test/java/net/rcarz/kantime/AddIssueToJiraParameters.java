@@ -126,7 +126,8 @@ public class AddIssueToJiraParameters {
       System.out.println("subtask:" + subtask);
 
       try {
-        autobot.sendPost(ChatRoom, "Case#: " + caseNumber + " added to JIRA. Key: " + newIssue);
+        autobot.sendPost(ChatRoom, "Case#: " + caseNumber
+            + " added to JIRA. Key: https://kanrad.atlassian.net/browse/" + newIssue);
       } catch (IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
