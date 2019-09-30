@@ -40,8 +40,9 @@ public class DBconnections {
 
     Connection con = DriverManager.getConnection(connectionUrl);
     Statement stmt = con.createStatement();
-    String sql = "select isClosed, isReadyToClose from CaseMaster where CaseNo = '" + Casenumber
-        + "' and (isnull(isClosed,0)=1 or isnull(isReadyToClose,0)=1)";
+    String sql = "select 1 from CaseMaster where CaseNo = '" + Casenumber
+        + "' and (isnull(isClosed,0)=1 or isnull(isReadyToClose,0)=1 "
+        + "or isnull(isRequirementTagged,0)=1 or isnull(isMarkedasRequirement,0)=1)";
 
     /*
      * total column
