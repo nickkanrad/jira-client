@@ -4,6 +4,9 @@ import net.rcarz.jiraclient.BasicCredentials;
 import net.rcarz.jiraclient.Issue;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.testng.annotations.Test;
 
@@ -15,21 +18,51 @@ public class closeSubTasksAndLiveCases {
 
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
-
+    BOT autobot = new BOT();
     DBconnections db = new DBconnections();
+
+    /*
+     * GET THE LIST OF UI COMPLETED TASKS
+     */
+
+    List<String> uiCompletedForms = new ArrayList<String>();
+    /* Search for issues */
+    Issue.SearchResult srr = jira.searchIssues("filter=10415");
+    System.out.println("Total UI completed takss: " + srr.total);
+    for (int start = 0; start < srr.total; start++) {
+      for (Issue i : srr.issues) {
+        uiCompletedForms.add(i.getKey());
+      }
+    }
 
     /*
      ******** CLOSE THE SUBTASKS ***********
      */
     try {
       /* Search for sub tasks and close */
-      Issue.SearchResult sr = jira.searchIssues(
-          "\"HH Team\" in (\"Dev - Phoenix\", \"Dev - ICE\", \"Dev - Mobile\", Nitish, Rasheed, Shaji, \"Shruthi (SSRS)\", Syed, Praful, Nithya) AND Sprint in openSprints() AND issuetype = Sub-task AND status = Completed");
+      Issue.SearchResult sr = jira.searchIssues("filter=10377");
       System.out.println("Total sub task to close: " + sr.total);
       for (Issue subissue : sr.issues) {
         System.out.println("Closed sub task : " + subissue);
         /* Now let's start progress on this issue and close */
         subissue.transition().execute("Closed");
+
+        /* if this closed one in ui completed list, send notification */
+        for (String uiCompleted : uiCompletedForms) {
+          if (uiCompleted.toString().equals(subissue.getKey())) {
+            try {
+              autobot.sendPost(
+                  "https://chat.googleapis.com/v1/spaces/AAAABOpM1tU/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=sQ_qcFnpdBfaRlIEexzmkFeRVk8hhPdYeLf9T4vsiVs%3D",
+                  "UI completed: " + subissue.getParent().toString());
+            } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            System.out.println("***********************");
+            System.out.println("UI completed task: " + uiCompleted.toString());
+            System.out.println("***********************");
+          }
+        }
       }
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());
@@ -42,8 +75,7 @@ public class closeSubTasksAndLiveCases {
      */
     try {
       /* Search for live case issues where the parent task is completed */
-      Issue.SearchResult liveCaseParentTask = jira.searchIssues(
-          "\"HH Team\" in (\"Dev - Phoenix\", \"Dev - ICE\", \"Dev - Mobile\", Nitish, Rasheed, Shaji, \"Shruthi (SSRS)\", Syed, Praful, Nithya) AND Sprint in openSprints() AND issuetype = Task  and labels = LiveCase and status in (Completed)");
+      Issue.SearchResult liveCaseParentTask = jira.searchIssues("filter=10416");
       System.out.println("Total: " + liveCaseParentTask.total);
       for (Issue issue : liveCaseParentTask.issues) {
         int closedSubtask = 0;
@@ -80,8 +112,7 @@ public class closeSubTasksAndLiveCases {
      */
     try {
       /* Search for live case issues where the parent task is completed */
-      Issue.SearchResult liveCaseParentTask = jira.searchIssues(
-          "\"HH Team\" in (\"Dev - Phoenix\", \"Dev - ICE\", \"Dev - Mobile\", Nitish, Rasheed,Shaji, \"Shruthi (SSRS)\", Syed, Praful, Nithya) AND labels=LiveCase and issuetype =Task and status not in (Closed)");
+      Issue.SearchResult liveCaseParentTask = jira.searchIssues("filter=10417");
       // "Key=HH-18563");
       System.out.println("Total Parent Live Case Task: " + liveCaseParentTask.total);
 
