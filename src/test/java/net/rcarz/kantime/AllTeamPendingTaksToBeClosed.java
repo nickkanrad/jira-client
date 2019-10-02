@@ -19,6 +19,7 @@ public class AllTeamPendingTaksToBeClosed {
   public void f() throws JiraException {
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
+    BOT autobot = new BOT();
 
     try {
       String serverIP = "192.168.1.18";
@@ -102,6 +103,33 @@ public class AllTeamPendingTaksToBeClosed {
           + "                 GROUP BY JIRAID \n" + "                    HAVING COUNT(JIRAID) > 1\n"
           + "        ) b\n" + "    ON a.ID < b.ID AND a.JIRAID=b.JIRAID)");
       conn.close();
+
+      /*************************************************
+       * GET ACCEPTANCE TASKS PENDING
+       ************************************************/
+
+      /* Search for issues */
+      Issue.SearchResult AcceptancePending = jira.searchIssues("filter=10424");
+      System.out.println("Total: " + AcceptancePending.total);
+
+      for (int start = 0; start < AcceptancePending.total; start++) {
+        for (Issue issue : AcceptancePending.issues) {
+
+          String ChatRoom = "";
+          switch (issue.getAssignee().toString()) {
+            case "dwilliams":
+              ChatRoom =
+                  "https://chat.googleapis.com/v1/spaces/-6u3zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=kFtCFXHPqycU9YDd7rtqmwnN9SAa3BOvxVqbU_iYGX8%3D";
+              break;
+            case "alewis":
+              ChatRoom =
+                  "https://chat.googleapis.com/v1/spaces/h-23zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7TqRRaPq_54oiOB0n1f0zStwqeoGbFcDEjpd47UGWtU%3D";
+              break;
+          }
+          autobot.sendPost(ChatRoom,
+              "Acceptance task is pending: https://kanrad.atlassian.net/browse/" + issue.getKey());
+        }
+      }
 
     } catch (Exception e) {
       System.err.println("Got an exception! ");
