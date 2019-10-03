@@ -142,7 +142,7 @@ public class AddSubIssueToJira {
       Issue testCaseReviewSubtask = ParentIssue.createSubtask()
           .field(Field.SUMMARY, "Test Case Review " + Key + " : " + exisitingIssue.getSummary())
           .field(Field.DESCRIPTION, "Review the test cases for the mentioned task")
-          .field(Field.ASSIGNEE, "").field(Field.FIX_VERSIONS, new ArrayList() {
+          .field(Field.ASSIGNEE, qa).field(Field.FIX_VERSIONS, new ArrayList() {
             {
               List<Version> cfselec = ParentIssue.getFixVersions();
               for (Version cfo : cfselec) {
