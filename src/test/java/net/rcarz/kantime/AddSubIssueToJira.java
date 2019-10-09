@@ -1,7 +1,10 @@
 package net.rcarz.kantime;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.rcarz.jiraclient.BasicCredentials;
@@ -107,7 +110,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("AcceptForTesting");
             }
-          }).execute();
+          }).field((Field.CUSTOMFIELD_PRODUCTION_DELIVERY),
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("Acceptance Subtask: " + acceptanceSubtask);
 
       /* Create sub-task - TEST CASE */
@@ -134,7 +139,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("Testcase");
             }
-          }).execute();
+          }).field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY,
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("Test case Subtask: " + testCaseSubtask);
 
       /* Create sub-task - TEST CASE REVIEW */
@@ -161,7 +168,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("TestCaseReview");
             }
-          }).execute();
+          }).field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY,
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("Test case review Subtask: " + testCaseReviewSubtask);
 
       /* Create sub-task - TESTING */
@@ -188,7 +197,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("Testing");
             }
-          }).execute();
+          }).field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY,
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("Testing Subtask: " + testingSubtask);
 
       /* Create sub-task - DATA CORRECTION/PERMISSION VERIFICATION */
@@ -219,7 +230,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("dataCorrectionVerification");
             }
-          }).execute();
+          }).field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY,
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("DC Subtask: " + dcPermissionSubtask);
 
       /* Create sub-task - TESTING STANDARD AND CLOSURE */
@@ -251,7 +264,9 @@ public class AddSubIssueToJira {
               add("QA_Task");
               add("Testing_standards");
             }
-          }).execute();
+          }).field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY,
+              ParentIssue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY))
+          .execute();
       System.out.println("Closure Subtask: " + testingstandardClosureSubtask);
 
       String ChatRoom = "";
@@ -277,5 +292,11 @@ public class AddSubIssueToJira {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  private Date dateformatter(String date) throws ParseException {
+    SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+    Date date1 = formatter1.parse(date);
+    return date1;
   }
 }

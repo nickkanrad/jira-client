@@ -157,6 +157,7 @@ public final class Field {
   public static final String SPRINT = "customfield_10019";
   public static final String EPICLINK = "customfield_10013";
   public static final String TICKET = "customfield_10046";
+  public static final String CUSTOMFIELD_PRODUCTION_DELIVERY = "customfield_10054";
 
   private Field() {
   }
@@ -186,13 +187,11 @@ public final class Field {
    *
    * @return a list of comments found in c
    */
-  public static List<Comment> getComments(Object c, RestClient restclient,
-      String issueKey) {
+  public static List<Comment> getComments(Object c, RestClient restclient, String issueKey) {
     List<Comment> results = new ArrayList<Comment>();
 
     if (c instanceof JSONObject && !((JSONObject) c).isNullObject()) {
-      results = getResourceArray(Comment.class, ((Map) c).get("comments"),
-          restclient, issueKey);
+      results = getResourceArray(Comment.class, ((Map) c).get("comments"), restclient, issueKey);
     }
 
     return results;
@@ -210,8 +209,7 @@ public final class Field {
     List<WorkLog> results = new ArrayList<WorkLog>();
 
     if (c instanceof JSONObject && !((JSONObject) c).isNullObject())
-      results = getResourceArray(WorkLog.class, ((Map) c).get("worklogs"),
-          restclient);
+      results = getResourceArray(WorkLog.class, ((Map) c).get("worklogs"), restclient);
 
     return results;
   }
@@ -224,8 +222,7 @@ public final class Field {
    *
    * @return a list of remote links found in c
    */
-  public static List<RemoteLink> getRemoteLinks(Object c,
-      RestClient restclient) {
+  public static List<RemoteLink> getRemoteLinks(Object c, RestClient restclient) {
     List<RemoteLink> results = new ArrayList<RemoteLink>();
 
     if (c instanceof JSONArray)
@@ -329,8 +326,8 @@ public final class Field {
    *
    * @return a Map instance with all entries found in m
    */
-  public static <TK extends Object, TV extends Object> Map<TK, TV> getMap(
-      Class<TK> keytype, Class<TV> valtype, Object m) {
+  public static <TK extends Object, TV extends Object> Map<TK, TV> getMap(Class<TK> keytype,
+      Class<TV> valtype, Object m) {
 
     Map<TK, TV> result = new HashMap<TK, TV>();
 
@@ -355,8 +352,7 @@ public final class Field {
    *
    * @return a Resource instance or null if r isn't a JSONObject instance
    */
-  public static <T extends Resource> T getResource(Class<T> type, Object r,
-      RestClient restclient) {
+  public static <T extends Resource> T getResource(Class<T> type, Object r, RestClient restclient) {
 
     return getResource(type, r, restclient, null);
   }
@@ -371,8 +367,8 @@ public final class Field {
    *
    * @return a Resource instance or null if r isn't a JSONObject instance
    */
-  public static <T extends Resource> T getResource(Class<T> type, Object r,
-      RestClient restclient, String parentId) {
+  public static <T extends Resource> T getResource(Class<T> type, Object r, RestClient restclient,
+      String parentId) {
 
     T result = null;
 
@@ -477,8 +473,8 @@ public final class Field {
    *
    * @return a list of Resources found in ra
    */
-  public static <T extends Resource> List<T> getResourceArray(Class<T> type,
-      Object ra, RestClient restclient) {
+  public static <T extends Resource> List<T> getResourceArray(Class<T> type, Object ra,
+      RestClient restclient) {
 
     return getResourceArray(type, ra, restclient, null);
   }
@@ -493,8 +489,8 @@ public final class Field {
    *
    * @return a list of Resources found in ra
    */
-  public static <T extends Resource> List<T> getResourceArray(Class<T> type,
-      Object ra, RestClient restclient, String parentId) {
+  public static <T extends Resource> List<T> getResourceArray(Class<T> type, Object ra,
+      RestClient restclient, String parentId) {
 
     List<T> results = new ArrayList<T>();
 
@@ -542,12 +538,10 @@ public final class Field {
    *
    * @throws JiraException when the field is missing or metadata is bad
    */
-  public static Meta getFieldMetadata(String name, JSONObject editmeta)
-      throws JiraException {
+  public static Meta getFieldMetadata(String name, JSONObject editmeta) throws JiraException {
 
     if (editmeta.isNullObject() || !editmeta.containsKey(name))
-      throw new JiraException(
-          "Field '" + name + "' does not exist or read-only");
+      throw new JiraException("Field '" + name + "' does not exist or read-only");
 
     Map f = (Map) editmeta.get(name);
     Meta m = new Meta();
@@ -556,8 +550,7 @@ public final class Field {
     m.name = Field.getString(f.get("name"));
 
     if (!f.containsKey("schema"))
-      throw new JiraException(
-          "Field '" + name + "' is missing schema metadata");
+      throw new JiraException("Field '" + name + "' is missing schema metadata");
 
     Map schema = (Map) f.get("schema");
 
@@ -598,8 +591,7 @@ public final class Field {
    *
    * @return a JSON-encoded array of items
    */
-  public static JSONArray toArray(Iterable iter, String type, String custom)
-      throws JiraException {
+  public static JSONArray toArray(Iterable iter, String type, String custom) throws JiraException {
     JSONArray results = new JSONArray();
 
     if (type == null)
@@ -616,8 +608,8 @@ public final class Field {
       } else
         realValue = val;
 
-      if (type.equals("component") || type.equals("group")
-          || type.equals("user") || type.equals("version")) {
+      if (type.equals("component") || type.equals("group") || type.equals("user")
+          || type.equals("version")) {
 
         JSONObject itemMap = new JSONObject();
 
@@ -628,16 +620,12 @@ public final class Field {
           itemMap.put(ValueType.NAME.toString(), realValue.toString());
 
         realResult = itemMap;
-      } else if (type.equals("option") || (type.equals("string")
-          && custom != null
-          && (custom.equals(
-              "com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes")
-              || custom.equals(
-                  "com.atlassian.jira.plugin.system.customfieldtypes:multiselect")))) {
+      } else if (type.equals("option") || (type.equals("string") && custom != null
+          && (custom.equals("com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes")
+              || custom.equals("com.atlassian.jira.plugin.system.customfieldtypes:multiselect")))) {
 
         realResult = new JSONObject();
-        ((JSONObject) realResult).put(ValueType.VALUE.toString(),
-            realValue.toString());
+        ((JSONObject) realResult).put(ValueType.VALUE.toString(), realValue.toString());
       } else if (type.equals("string"))
         realResult = realValue.toString();
 
@@ -676,8 +664,7 @@ public final class Field {
       if (value == null)
         value = new ArrayList();
       else if (!(value instanceof Iterable))
-        throw new JiraException(
-            "Field '" + name + "' expects an Iterable value");
+        throw new JiraException("Field '" + name + "' expects an Iterable value");
 
       return toArray((Iterable) value, m.items, m.custom);
     } else if (m.type.equals("date")) {
@@ -686,8 +673,7 @@ public final class Field {
 
       Date d = toDate(value);
       if (d == null)
-        throw new JiraException(
-            "Field '" + name + "' expects a date value or format is invalid");
+        throw new JiraException("Field '" + name + "' expects a date value or format is invalid");
 
       SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
       return df.format(d);
@@ -695,14 +681,12 @@ public final class Field {
       if (value == null)
         return JSONNull.getInstance();
       else if (!(value instanceof Timestamp))
-        throw new JiraException(
-            "Field '" + name + "' expects a Timestamp value");
+        throw new JiraException("Field '" + name + "' expects a Timestamp value");
 
       SimpleDateFormat df = new SimpleDateFormat(DATETIME_FORMAT);
       return df.format(value);
-    } else if (m.type.equals("issuetype") || m.type.equals("priority")
-        || m.type.equals("user") || m.type.equals("resolution")
-        || m.type.equals("securitylevel")) {
+    } else if (m.type.equals("issuetype") || m.type.equals("priority") || m.type.equals("user")
+        || m.type.equals("resolution") || m.type.equals("securitylevel")) {
       JSONObject json = new JSONObject();
 
       if (value == null)
@@ -748,10 +732,8 @@ public final class Field {
     } else if (m.type.equals("number")) {
       if (value == null) // Non mandatory number fields can be set to null
         return JSONNull.getInstance();
-      else if (!(value instanceof java.lang.Integer)
-          && !(value instanceof java.lang.Double)
-          && !(value instanceof java.lang.Float)
-          && !(value instanceof java.lang.Long)) {
+      else if (!(value instanceof java.lang.Integer) && !(value instanceof java.lang.Double)
+          && !(value instanceof java.lang.Float) && !(value instanceof java.lang.Long)) {
         throw new JiraException("Field '" + name + "' expects a Numeric value");
       }
       return value;
@@ -771,8 +753,7 @@ public final class Field {
       return value;
     }
 
-    throw new UnsupportedOperationException(
-        m.type + " is not a supported field type");
+    throw new UnsupportedOperationException(m.type + " is not a supported field type");
   }
 
   /**
