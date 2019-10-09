@@ -294,9 +294,4 @@ public class AddSubIssueToJira {
     }
   }
 
-  private Date dateformatter(String date) throws ParseException {
-    SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
-    Date date1 = formatter1.parse(date);
-    return date1;
-  }
 }

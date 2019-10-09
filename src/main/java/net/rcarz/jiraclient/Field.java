@@ -673,7 +673,8 @@ public final class Field {
 
       Date d = toDate(value);
       if (d == null)
-        throw new JiraException("Field '" + name + "' expects a date value or format is invalid");
+        return JSONNull.getInstance();
+      // throw new JiraException("Field '" + name + "' expects a date value or format is invalid");
 
       SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
       return df.format(d);

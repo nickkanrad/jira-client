@@ -33,7 +33,7 @@ public class NewTest {
     BasicCredentials creds = new BasicCredentials("nick@kanrad.com", "WORF3aXXRSjXmejgZL7A9EF2");
     JiraClient jira = new JiraClient("https://kanrad.atlassian.net", creds);
 
-    Issue issue = jira.getIssue("HH-21474");
+    Issue issue = jira.getIssue("HH-23443");
 
     /* Pretend customfield_1234 is a text field. Get the raw field value... */
     Object cfvalue = issue.getField(Field.CUSTOMFIELD_PRODUCTION_DELIVERY);
@@ -41,6 +41,8 @@ public class NewTest {
     /* ... Convert it to a string and then print the value. */
     String cfstring = Field.getString(cfvalue);
     System.out.println(cfstring);
+
+    issue.update().field(Field.CUSTOMFIELD_PRODUCTION_DELIVERY, null).execute();
 
     // String dateStart = "2012/01/14";
     // String dateStop = "2012/01/15";
