@@ -58,8 +58,8 @@ public class AddSubIssueToJira {
         case "Nithya":
           qa = "dwilliams";
           break;
-        case "Praful":
-          qa = "gbrown";
+        case "OBP":
+          qa = "alewis";
           break;
         case "Rasheed":
           qa = "alewis";
@@ -77,7 +77,7 @@ public class AddSubIssueToJira {
           qa = "alewis";
           break;
         case "Onboarding":
-          qa = "dwilliams";
+          qa = "alewis";
           break;
         default:
           qa = "";
@@ -270,18 +270,19 @@ public class AddSubIssueToJira {
       System.out.println("Closure Subtask: " + testingstandardClosureSubtask);
 
       String ChatRoom = "";
-      switch (qa) {
-        case "dwilliams":
-          ChatRoom =
-              "https://chat.googleapis.com/v1/spaces/-6u3zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=kFtCFXHPqycU9YDd7rtqmwnN9SAa3BOvxVqbU_iYGX8%3D";
-          break;
-        case "alewis":
-          ChatRoom =
-              "https://chat.googleapis.com/v1/spaces/h-23zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7TqRRaPq_54oiOB0n1f0zStwqeoGbFcDEjpd47UGWtU%3D";
-          break;
+      if (!(qa.equals(""))) {
+        switch (qa) {
+          case "dwilliams":
+            ChatRoom =
+                "https://chat.googleapis.com/v1/spaces/-6u3zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=kFtCFXHPqycU9YDd7rtqmwnN9SAa3BOvxVqbU_iYGX8%3D";
+            break;
+          case "alewis":
+            ChatRoom =
+                "https://chat.googleapis.com/v1/spaces/h-23zAAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7TqRRaPq_54oiOB0n1f0zStwqeoGbFcDEjpd47UGWtU%3D";
+            break;
+        }
+        autobot.sendPost(ChatRoom, "New release tasks are added:" + acceptanceSubtask);
       }
-      autobot.sendPost(ChatRoom, "New release tasks are added:" + acceptanceSubtask);
-
     } catch (JiraException ex) {
       System.err.println(ex.getMessage());
 
