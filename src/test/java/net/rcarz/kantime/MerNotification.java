@@ -120,13 +120,24 @@ public class MerNotification {
 			System.out.println(agenciesList);
 
 			if (!agenciesList.equals("")) {
-				try {
-					autobot.sendPost(
-							"https://chat.googleapis.com/v1/spaces/AAAA6iDuIgI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Y1fHIVoW1tMmnXU05d95c7ARfBT6M7_TO7z4gFhzkHA%3D",
-							"```Month end report locking failing for: \n" + agenciesList + "```");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (!agenciesList.equals("No agency failing to lock \n")) {
+					try {
+						autobot.sendPost(
+								"https://chat.googleapis.com/v1/spaces/AAAA6iDuIgI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Y1fHIVoW1tMmnXU05d95c7ARfBT6M7_TO7z4gFhzkHA%3D",
+								"```Month end report locking failing for: \n" + agenciesList + "```");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						autobot.sendPost(
+								"https://chat.googleapis.com/v1/spaces/AAAA6iDuIgI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Y1fHIVoW1tMmnXU05d95c7ARfBT6M7_TO7z4gFhzkHA%3D",
+								"```Month End Report lock is not failing for any agency```");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		} catch (Exception e) {
